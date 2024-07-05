@@ -104,7 +104,7 @@ jobs:
     name: Rollback Backend Deployment
     runs-on: self-hosted
     needs: [deploy-production]
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || needs.api-test-production.result == 'failure'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
