@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-db-deployment
+  name: postgres-db-deployment-new
   labels:
-    app: postgres-db
+    app: postgres-db-new
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-db
+      app: postgres-db-new
   template:
     metadata:
       labels:
-        app: postgres-db
+        app: postgres-db-new
     spec:
       containers:
-      - name: postgres-db
+      - name: postgres-db-new
         image: mtararujs/postgres:latest
         ports:
           - containerPort: 5432

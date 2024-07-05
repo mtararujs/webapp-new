@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: backend-deployment-new
   labels:
-    app: backend
+    app: backend-new
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: backend-new
   template:
     metadata:
       labels:
-        app: backend
+        app: backend-new
     spec:
       containers:
-      - name: backend
+      - name: backend-new
         image: mtararujs/webapp-backend:latest
         ports:
           - containerPort: 5050

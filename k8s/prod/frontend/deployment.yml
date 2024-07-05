@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-frontend-new
+  labels:
+    app: webapp-frontend-new
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapp-frontend-new
+  template:
+    metadata:
+      labels:
+        app: webapp-frontend-new
+    spec:
+      containers:
+      - name: webapp-frontend-pod-new
+        image: mtararujs/webapp-frontend
+        ports:
+        - containerPort: 80
