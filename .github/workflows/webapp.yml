@@ -103,7 +103,7 @@ jobs:
   rollback-backend:
     name: Rollback Backend Deployment
     runs-on: self-hosted
-    needs: [deploy-production]
+    needs: [deploy-production, api-test-production]
     if: github.event_name == 'workflow_dispatch' || needs.api-test-production.result == 'failure'
     steps:
       - name: Checkout code
@@ -116,7 +116,7 @@ jobs:
   rollback-frontend:
     name: Rollback Frontend Deployment
     runs-on: self-hosted
-    needs: [deploy-production]
+    needs: [deploy-production, api-test-production]
     if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
