@@ -11,4 +11,3 @@ runs:
       shell: bash
       run: |
         kubectl set image deployment/webapp-${{ inputs.application }}-new webapp-${{ inputs.application }}-new=mtararujs/${{ inputs.application }}:$GITHUB_SHA
-        kubectl rollout restart deployment/webapp-${{ inputs.application }}-new
