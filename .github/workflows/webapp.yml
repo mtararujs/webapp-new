@@ -39,17 +39,17 @@ jobs:
     if: success()
 
     steps:
-      - name: Deploy Frontend application
+      - name: Deploy Frontend application to PROD
         uses: ./.github/actions/deploy
         with:
           application: frontend
-      - name: Deploy Backend application
+      - name: Deploy Backend application to PROD
         uses: ./.github/actions/deploy
         with:
           application: backend
 
   api-test-production:
-    name: Run Tests
+    name: Run API Tests against PROD
     runs-on: self-hosted
     needs: [deploy-production]
     steps:

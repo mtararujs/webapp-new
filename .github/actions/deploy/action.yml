@@ -10,8 +10,10 @@ runs:
     - name: Checkout code
       uses: actions/checkout@v3
     - name: Apply Kubernetes configurations
+      shell: bash
       run: |
         kubectl apply -f k8s/prod/${{ inputs.application }}/deployment.yml
         kubectl apply -f k8s/prod/${{ inputs.application }}/service.yml
     - name: Rolling update for frontend
+      shell: bash
       run: kubectl rollout restart deployment/webapp-${{ inputs.application }}-new
