@@ -1,34 +1,25 @@
-FROM node:22
+FROM node:22 as build-stage
 
 WORKDIR /frontend-app
 COPY package.json ./
 RUN npm install
 COPY public public
 COPY src src
+RUN npm run build
 
-EXPOSE 3000
+FROM nginx:alpine
+COPY --from=build-stage /frontend-app/build /usr/share/nginx/html
+COPY nginx.conf nginx.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-CMD [ "npm", "start" ]
 
-
-# ### Step 3: Set Up and Run the Front-end
-
-# 1. Navigate to the `frontend` directory:
-
-#    ```sh
-#    cd frontend
-#    ```
-
-# 2. Install the required dependencies:
-
-#    ```sh
-#    npm install
-#    ```
-
-# 3. Start the front-end development server:
-
-#    ```sh
-#    npm start
-#    ```
-
-#    The front-end server should now be running at `http://localhost:3000`.
+# First stage:
+#  node:22 used as base image
+# All required code is copied (package.json, frontend application code)
+# Commands “npm install” and “npm run build” are executed, so that there is react build available
+# Next stage:
+# E.g. nginx:alpine image is used as base
+# Artifacts from first stage is copied (build, so explore where it could be found) to nginx target location (see documentation)
+# Expose command defined to specify port which needs to be exposed (80)
+# nginx command executed to start nginx service
