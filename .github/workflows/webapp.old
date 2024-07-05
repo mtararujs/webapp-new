@@ -1,0 +1,98 @@
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-frontend:
+    name: Build Frontend
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push frontend Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+
+  build-backend:
+    name: Build Backend
+    runs-on: self-hosted
+
+    steps:
+      - name: Build Webapp Backend application
+        uses: ./.github/actions/build
+        with:
+          application: backend
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+      # - name: Log in to Docker Hub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # - name: Build and push frontend Docker image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+      # - name: Build and push backend Docker image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest ./backend
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: self-hosted
+    needs: [build-frontend, build-backend]
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Apply Kubernetes configurations
+        run: |
+          kubectl apply -f k8s/prod/backend/deployment.yml
+          kubectl apply -f k8s/prod/backend/service.yml
+          kubectl apply -f k8s/prod/frontend/deployment.yml
+          kubectl apply -f k8s/prod/frontend/service.yml
+
+      - name: Rolling update for frontend
+        run: kubectl rollout restart deployment/webapp-frontend-new
+
+      - name: Rolling update for backend
+        run: kubectl rollout restart deployment/webapp-backend-new
+
+  test:
+    name: Run Tests
+    runs-on: self-hosted
+    needs: [deploy]
+
+    steps:
+      - name: Wait for Services to be Ready
+        run: |
+          kubectl rollout status deployment/backend-deployment
+
+      - name: Run API Tests
+        run: |
+          docker pull mtararujs/tests:latest
+          docker run --rm --network=host --name api-tests mtararujs/tests cucumber PLATFORM=DEV
+          docker rm -f api-tests
