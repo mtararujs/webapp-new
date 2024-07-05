@@ -14,10 +14,8 @@ runs:
   using: "composite"
   steps:
     - name: Checkout code
-      shell: bash
       uses: actions/checkout@v3
     - name: Log in to Docker Hub
-      shell: bash
       uses: docker/login-action@v2
       with:
         username: ${{ inputs.docker_username }}
