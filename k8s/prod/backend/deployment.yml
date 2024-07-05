@@ -15,7 +15,7 @@ spec:
         app: backend-new
     spec:
       containers:
-      - name: backend-new
+      - name: webapp-backend-new
         image: mtararujs/webapp-backend:latest
         ports:
           - containerPort: 5050
