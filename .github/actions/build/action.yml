@@ -10,6 +10,9 @@ inputs:
   docker_password:
     description: '...'
     required: true
+  docker_image_tag:
+    description: '...'
+    required: true
 runs:
   using: "composite"
   steps:
@@ -22,5 +25,5 @@ runs:
     - name: Build and push frontend Docker image
       shell: bash
       run: |
-        docker build -t ${{ inputs.docker_username }}/${{ inputs.application }}:latest ./frontend
-        docker push ${{ inputs.docker_username }}/${{ inputs.application }}:latest
+        docker build -t ${{ inputs.docker_image_tag }} ./${{ inputs.application }}
+        docker push ${{ inputs.docker_image_tag }}

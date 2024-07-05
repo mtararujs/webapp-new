@@ -27,6 +27,7 @@ jobs:
         uses: ./.github/actions/build
         with:
           application: frontend
+          docker_image_tag: ${{ secrets.DOCKER_USERNAME }}/frontend:$GITHUB_SHA
           docker_username: ${{ secrets.DOCKER_USERNAME }}
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -47,6 +48,7 @@ jobs:
         uses: ./.github/actions/build
         with:
           application: backend
+          docker_image_tag: ${{ secrets.DOCKER_USERNAME }}/backend:$GITHUB_SHA
           docker_username: ${{ secrets.DOCKER_USERNAME }}
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -83,7 +85,16 @@ jobs:
     runs-on: self-hosted
     needs: [deploy-production]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
       - name: Run API tests
+        if: steps.filter.outputs.backend == 'true'
         uses: ./.github/actions/test
         with:
           test_env: PRD
