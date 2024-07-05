@@ -13,7 +13,6 @@ jobs:
   build-frontend:
     name: Build Frontend
     runs-on: self-hosted
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -37,6 +36,11 @@ jobs:
     steps:
       - name: Build Webapp Backend application
         uses: ./.github/actions/build
+        with:
+          application: backend
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+
 
       # - name: Log in to Docker Hub
       #   uses: docker/login-action@v2
