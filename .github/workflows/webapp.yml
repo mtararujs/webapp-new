@@ -103,8 +103,8 @@ jobs:
   rollback-backend:
     name: Rollback Backend Deployment
     runs-on: self-hosted
-    needs: [deploy-production, api-test-production]
-    if: github.event_name == 'workflow_dispatch' || needs.api-test-production.result == 'failure'
+    needs: [api-test-production]
+    if: github.event_name == 'workflow_dispatch' || ${{ always() && contains(needs.*.result, 'failure') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -116,7 +116,7 @@ jobs:
   rollback-frontend:
     name: Rollback Frontend Deployment
     runs-on: self-hosted
-    needs: [deploy-production, api-test-production]
+    needs: [api-test-production]
     if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
