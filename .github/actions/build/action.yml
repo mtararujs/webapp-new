@@ -22,5 +22,5 @@ runs:
         password: ${{ inputs.docker_password }}
     - name: Build and push frontend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ inputs.application }}:latest ./frontend
-        docker push ${{ secrets.DOCKER_USERNAME }}/${{ inputs.application }}:latest
+        docker build -t ${{ inputs.docker_username }}/${{ inputs.application }}:latest ./frontend
+        docker push ${{ inputs.docker_username }}/${{ inputs.application }}:latest
