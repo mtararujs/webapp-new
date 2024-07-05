@@ -74,12 +74,12 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-node-
 
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          until pg_isready --host=localhost --port=5432; do
-            echo "Waiting for database connection..."
-            sleep 1
-          done
+      # - name: Wait for PostgreSQL to be ready
+      #   run: |
+      #     until pg_isready --host=localhost --port=5432; do
+      #       echo "Waiting for database connection..."
+      #       sleep 1
+      #     done
 
       - name: Install dependencies
         run: cd backend && npm install
