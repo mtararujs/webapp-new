@@ -9,7 +9,8 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY --from=build-stage /frontend-app/build /usr/share/nginx/html
-COPY nginx.conf nginx.conf
+RUN mkdir nginx
+COPY nginx.conf mkdir/nginx.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
