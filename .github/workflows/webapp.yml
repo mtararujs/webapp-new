@@ -57,11 +57,23 @@ jobs:
     if: success()
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
       - name: Deploy Frontend application to PROD
+        if: steps.filter.outputs.frontend == 'true'
         uses: ./.github/actions/deploy
         with:
           application: frontend
       - name: Deploy Backend application to PROD
+        if: steps.filter.outputs.backend == 'true'
         uses: ./.github/actions/deploy
         with:
           application: backend
