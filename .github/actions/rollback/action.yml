@@ -1,0 +1,13 @@
+name: 'Perform rollback on the application'
+description: '..'
+inputs:
+  application:
+    description: '...'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Rolling update for frontend
+      shell: bash
+      run: |
+        kubectl rollout undo deployments webapp-${{ inputs.application }}-new
