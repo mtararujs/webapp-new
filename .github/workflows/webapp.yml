@@ -46,7 +46,7 @@ jobs:
 
       - name: Build and push frontend Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend -f Dockerfile-multi-stage
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
       - name: Build and push backend Docker image
@@ -70,8 +70,6 @@ jobs:
           kubectl apply -f k8s/prod/backend/service.yml
           kubectl apply -f k8s/prod/frontend/deployment.yml
           kubectl apply -f k8s/prod/frontend/service.yml
-          kubectl apply -f k8s/prod/database/deployment.yml
-          kubectl apply -f k8s/prod/database/service.yml
 
       - name: Rolling update for frontend
         run: kubectl rollout restart deployment/webapp-frontend-new
