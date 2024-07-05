@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: webapp-frontend-pod-new
-        image: mtararujs/webapp-frontend
+        image: mtararujs/frontend
         ports:
         - containerPort: 80
