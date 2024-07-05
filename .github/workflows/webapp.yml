@@ -14,7 +14,16 @@ jobs:
     name: Build Frontend
     runs-on: self-hosted
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
       - name: Build Webapp Frontend application
+        if: steps.filter.outputs.frontend == 'true'
         uses: ./.github/actions/build
         with:
           application: frontend
@@ -25,7 +34,16 @@ jobs:
     name: Build Backend
     runs-on: self-hosted
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
       - name: Build Webapp Backend application
+        if: steps.filter.outputs.backend == 'true'
         uses: ./.github/actions/build
         with:
           application: backend
