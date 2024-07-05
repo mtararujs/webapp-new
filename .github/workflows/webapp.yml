@@ -51,7 +51,7 @@ jobs:
   api-test-production:
     name: Run Tests
     runs-on: self-hosted
-    needs: [deploy]
+    needs: [deploy-production]
     steps:
       - name: Run API tests
         uses: ./.github/actions/test
