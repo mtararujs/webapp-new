@@ -101,27 +101,27 @@ jobs:
           test_env: PRD
       
   rollback-backend:
-  name: Rollback Backend Deployment
-  runs-on: self-hosted
-  needs: [deploy-production]
-  if: github.event_name == 'workflow_dispatch'
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Rollback Backend application from PROD
-      uses: ./.github/actions/rollback
-      with:
-        application: backend
+    name: Rollback Backend Deployment
+    runs-on: self-hosted
+    needs: [deploy-production]
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Rollback Backend application from PROD
+        uses: ./.github/actions/rollback
+        with:
+          application: backend
 
   rollback-frontend:
-  name: Rollback Frontend Deployment
-  runs-on: self-hosted
-  needs: [deploy-production]
-  if: github.event_name == 'workflow_dispatch'
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Rollback Frontend application from PROD
-      uses: ./.github/actions/rollback
-      with:
-        application: frontend
+    name: Rollback Frontend Deployment
+    runs-on: self-hosted
+    needs: [deploy-production]
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Rollback Frontend application from PROD
+        uses: ./.github/actions/rollback
+        with:
+          application: frontend
